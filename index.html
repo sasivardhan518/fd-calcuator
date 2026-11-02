@@ -1,0 +1,1107 @@
+
+fd calculator with quarter and monthly calculations.html
+100%
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>India FD Interest Calculator</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #17202a;
+        --muted: #627386;
+        --line: #d9e1e8;
+        --panel: #ffffff;
+        --page: #f5f7fa;
+        --accent: #0d6b6b;
+        --accent-2: #9a5b13;
+        --good: #0d6b3f;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+        color: var(--ink);
+        background: var(--page);
+      }
+
+      main {
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 28px 0 40px;
+      }
+
+      header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 20px;
+        margin-bottom: 18px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(1.5rem, 3vw, 2.4rem);
+        line-height: 1.08;
+        letter-spacing: 0;
+      }
+
+      .subhead {
+        margin: 8px 0 0;
+        color: var(--muted);
+        font-size: 0.98rem;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: 360px 1fr;
+        gap: 18px;
+        align-items: start;
+      }
+
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+      }
+
+      .form-panel {
+        position: sticky;
+        top: 16px;
+        padding: 16px;
+      }
+
+      .fields {
+        display: grid;
+        gap: 13px;
+      }
+
+      label {
+        display: grid;
+        gap: 6px;
+        font-size: 0.82rem;
+        font-weight: 700;
+        color: #314254;
+      }
+
+      .check-field {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 0 2px;
+        color: #314254;
+        font-size: 0.88rem;
+        font-weight: 800;
+      }
+
+      .check-field input {
+        width: 18px;
+        height: 18px;
+        margin: 0;
+        accent-color: var(--accent);
+      }
+
+      input,
+      select {
+        width: 100%;
+        height: 42px;
+        border: 1px solid #cbd6df;
+        border-radius: 6px;
+        padding: 0 11px;
+        font: inherit;
+        color: var(--ink);
+        background: #fff;
+      }
+
+      input:focus,
+      select:focus {
+        outline: 3px solid rgba(13, 107, 107, 0.15);
+        border-color: var(--accent);
+      }
+
+      .two {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .button-row {
+        display: flex;
+        gap: 10px;
+        margin-top: 16px;
+      }
+
+      button {
+        min-height: 42px;
+        border: 0;
+        border-radius: 6px;
+        padding: 0 14px;
+        font: inherit;
+        font-weight: 800;
+        cursor: pointer;
+      }
+
+      .primary {
+        flex: 1;
+        color: #fff;
+        background: var(--accent);
+      }
+
+      .secondary {
+        color: var(--accent);
+        background: #e7f2f2;
+      }
+
+      .summary {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+        margin-bottom: 14px;
+      }
+
+      .metric {
+        padding: 14px;
+      }
+
+      .metric span {
+        display: block;
+        color: var(--muted);
+        font-size: 0.78rem;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+
+      .metric strong {
+        display: block;
+        margin-top: 6px;
+        font-size: 1.35rem;
+        line-height: 1.15;
+      }
+
+      .metric.good strong {
+        color: var(--good);
+      }
+
+      .table-panel {
+        overflow: hidden;
+      }
+
+      .table-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 14px 16px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      h2 {
+        margin: 0;
+        font-size: 1rem;
+        letter-spacing: 0;
+      }
+
+      .pill {
+        color: var(--accent-2);
+        background: #fff2df;
+        border: 1px solid #f0d5b4;
+        border-radius: 999px;
+        padding: 5px 10px;
+        font-size: 0.78rem;
+        font-weight: 800;
+        white-space: nowrap;
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        min-width: 1040px;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        padding: 12px 14px;
+        border-bottom: 1px solid var(--line);
+        text-align: right;
+        white-space: nowrap;
+      }
+
+      th {
+        background: #f9fbfc;
+        color: #405266;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+      }
+
+      th:first-child,
+      td:first-child {
+        text-align: left;
+      }
+
+      tbody tr:hover {
+        background: #f7fbfb;
+      }
+
+      .year-row {
+        cursor: pointer;
+      }
+
+      .year-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 0;
+        padding: 0;
+        color: var(--accent);
+        background: transparent;
+        font-weight: 900;
+      }
+
+      .year-button::before {
+        content: "+";
+        display: inline-grid;
+        width: 22px;
+        height: 22px;
+        place-items: center;
+        border: 1px solid #b8c9d6;
+        border-radius: 50%;
+        color: var(--accent);
+        font-size: 0.9rem;
+        line-height: 1;
+      }
+
+      .year-button[aria-expanded="true"]::before {
+        content: "-";
+      }
+
+      .detail-row[hidden] {
+        display: none;
+      }
+
+      .detail-row td {
+        padding: 0;
+        background: #fbfcfd;
+      }
+
+      .detail-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        padding: 14px;
+      }
+
+      .detail-section {
+        min-width: 0;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        overflow: hidden;
+        background: #fff;
+      }
+
+      .current-fy-summary {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 10px;
+        padding: 12px;
+        border: 1px solid #b9d6cf;
+        border-radius: 8px;
+        background: #f1fbf8;
+      }
+
+      .current-fy-summary div {
+        min-width: 0;
+      }
+
+      .current-fy-summary span {
+        display: block;
+        color: #48655f;
+        font-size: 0.74rem;
+        font-weight: 900;
+        text-transform: uppercase;
+      }
+
+      .current-fy-summary strong {
+        display: block;
+        margin-top: 4px;
+        color: #0d5f48;
+        font-size: 1rem;
+      }
+
+      .detail-title {
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--line);
+        color: #314254;
+        font-size: 0.82rem;
+        font-weight: 900;
+        text-transform: uppercase;
+      }
+
+      .mini-table {
+        min-width: 0;
+        font-size: 0.86rem;
+      }
+
+      .mini-table th,
+      .mini-table td {
+        padding: 9px 10px;
+      }
+
+      .mini-table th {
+        font-size: 0.72rem;
+      }
+
+      tfoot td {
+        font-weight: 900;
+        background: #fbfcfd;
+      }
+
+      .note {
+        margin-top: 12px;
+        color: var(--muted);
+        font-size: 0.86rem;
+        line-height: 1.45;
+      }
+
+      .error {
+        margin-top: 12px;
+        color: #9d2424;
+        font-weight: 800;
+      }
+
+      @media (max-width: 920px) {
+        header {
+          display: block;
+        }
+
+        .layout,
+        .summary,
+        .detail-grid,
+        .current-fy-summary {
+          grid-template-columns: 1fr;
+        }
+
+        .form-panel {
+          position: static;
+        }
+      }
+
+      @media (max-width: 520px) {
+        main {
+          width: min(100% - 20px, 1180px);
+          padding-top: 18px;
+        }
+
+        .two {
+          grid-template-columns: 1fr;
+        }
+
+        .table-head {
+          display: block;
+        }
+
+        .pill {
+          display: inline-block;
+          margin-top: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <div>
+          <h1>FD Interest Calculator</h1>
+          <p class="subhead">Indian financial-year breakup for cumulative fixed deposits.</p>
+        </div>
+      </header>
+
+      <section class="layout">
+        <form class="panel form-panel" id="fdForm">
+          <div class="fields">
+            <label>
+              Amount deposited
+              <input id="amount" type="number" min="1" step="1" value="75000" />
+            </label>
+
+            <label>
+              FD start date
+              <input id="startDate" type="date" value="2025-03-11" />
+            </label>
+
+            <div class="two">
+              <label>
+                Tenure
+                <input id="tenure" type="number" min="1" step="1" value="10" />
+              </label>
+
+              <label>
+                Tenure unit
+                <select id="tenureUnit">
+                  <option value="years" selected>Years</option>
+                  <option value="months">Months</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="two">
+              <label>
+                Interest rate p.a.
+                <input id="rate" type="number" min="0" step="0.01" value="7" />
+              </label>
+
+              <label>
+                Compounding
+                <select id="compound">
+                  <option value="12">Monthly</option>
+                  <option value="4" selected>Quarterly</option>
+                  <option value="2">Half-yearly</option>
+                  <option value="1">Yearly</option>
+                </select>
+              </label>
+            </div>
+
+            <label>
+              Interest payout type
+              <select id="payout">
+                <option value="cumulative" selected>Cumulative</option>
+              </select>
+            </label>
+
+            <div class="two">
+              <label>
+                Credit rounding
+                <select id="creditRounding">
+                  <option value="nearest" selected>Nearest rupee</option>
+                  <option value="paise">Paise</option>
+                  <option value="none">No rounding</option>
+                </select>
+              </label>
+
+              <label>
+                FY display rounding
+                <select id="fyRounding">
+                  <option value="ceil" selected>Round up</option>
+                  <option value="nearest">Nearest rupee</option>
+                  <option value="paise">Paise</option>
+                </select>
+              </label>
+            </div>
+
+            <label class="check-field">
+              <input id="showCurrentFyOnly" type="checkbox" />
+              Show current financial year only
+            </label>
+          </div>
+
+          <div class="button-row">
+            <button class="primary" type="submit">Calculate</button>
+            <button class="secondary" type="button" id="resetBtn">Reset</button>
+          </div>
+          <div class="error" id="error" role="alert"></div>
+        </form>
+
+        <section>
+          <div class="summary" id="summary"></div>
+
+          <div class="panel table-panel">
+            <div class="table-head">
+              <h2>Financial Year Breakup</h2>
+              <span class="pill" id="maturityText">Maturity date</span>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Financial Year</th>
+                    <th>Period Covered</th>
+                    <th>Days</th>
+                    <th>Opening Amount</th>
+                    <th>Interest Earned</th>
+                    <th>Interest Total</th>
+                    <th>Interest Credited</th>
+                    <th>Total Amount at FY End</th>
+                  </tr>
+                </thead>
+                <tbody id="rows"></tbody>
+                <tfoot id="totals"></tfoot>
+              </table>
+            </div>
+          </div>
+
+          <p class="note" id="note"></p>
+        </section>
+      </section>
+    </main>
+
+    <script>
+      const defaults = {
+        amount: "75000",
+        startDate: "2025-03-11",
+        tenure: "10",
+        tenureUnit: "years",
+        rate: "7",
+        compound: "4",
+        payout: "cumulative",
+        creditRounding: "nearest",
+        fyRounding: "ceil",
+        showCurrentFyOnly: false,
+      };
+
+      const formatter0 = new Intl.NumberFormat("en-IN", {
+        style: "currency",
+        currency: "INR",
+        maximumFractionDigits: 0,
+      });
+
+      const formatter2 = new Intl.NumberFormat("en-IN", {
+        style: "currency",
+        currency: "INR",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+
+      const dateFormatter = new Intl.DateTimeFormat("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      });
+
+      const form = document.getElementById("fdForm");
+      const rowsEl = document.getElementById("rows");
+      const totalsEl = document.getElementById("totals");
+      const summaryEl = document.getElementById("summary");
+      const errorEl = document.getElementById("error");
+      const noteEl = document.getElementById("note");
+      const maturityTextEl = document.getElementById("maturityText");
+      const resetBtn = document.getElementById("resetBtn");
+
+      function localDate(value) {
+        const [year, month, day] = value.split("-").map(Number);
+        return new Date(year, month - 1, day);
+      }
+
+      function addMonths(date, months) {
+        const result = new Date(date);
+        const originalDay = result.getDate();
+        result.setDate(1);
+        result.setMonth(result.getMonth() + months);
+        const lastDay = new Date(result.getFullYear(), result.getMonth() + 1, 0).getDate();
+        result.setDate(Math.min(originalDay, lastDay));
+        return result;
+      }
+
+      function addDays(date, days) {
+        const result = new Date(date);
+        result.setDate(result.getDate() + days);
+        return result;
+      }
+
+      function daysBetween(start, end) {
+        const msPerDay = 24 * 60 * 60 * 1000;
+        return Math.round((end - start) / msPerDay);
+      }
+
+      function financialYearLabel(date) {
+        const year = date.getMonth() >= 3 ? date.getFullYear() : date.getFullYear() - 1;
+        return `FY ${year}-${String(year + 1).slice(-2)}`;
+      }
+
+      function financialYearStart(date) {
+        const year = date.getMonth() >= 3 ? date.getFullYear() : date.getFullYear() - 1;
+        return new Date(year, 3, 1);
+      }
+
+      function financialYearEndExclusive(date) {
+        const start = financialYearStart(date);
+        return new Date(start.getFullYear() + 1, 3, 1);
+      }
+
+      function monthEndExclusive(date) {
+        return new Date(date.getFullYear(), date.getMonth() + 1, 1);
+      }
+
+      function monthLabel(date) {
+        return new Intl.DateTimeFormat("en-IN", {
+          month: "short",
+          year: "numeric",
+        }).format(date);
+      }
+
+      function todayLocal() {
+        const now = new Date();
+        return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      }
+
+      function financialQuarterInfo(date) {
+        const month = date.getMonth();
+        if (month >= 3 && month <= 5) return { key: `${date.getFullYear()}-Q1`, label: "Q1 (Apr-Jun)" };
+        if (month >= 6 && month <= 8) return { key: `${date.getFullYear()}-Q2`, label: "Q2 (Jul-Sep)" };
+        if (month >= 9 && month <= 11) return { key: `${date.getFullYear()}-Q3`, label: "Q3 (Oct-Dec)" };
+        return { key: `${date.getFullYear() - 1}-Q4`, label: "Q4 (Jan-Mar)" };
+      }
+
+      function financialQuarterEndExclusive(date) {
+        const month = date.getMonth();
+        if (month >= 3 && month <= 5) return new Date(date.getFullYear(), 6, 1);
+        if (month >= 6 && month <= 8) return new Date(date.getFullYear(), 9, 1);
+        if (month >= 9 && month <= 11) return new Date(date.getFullYear() + 1, 0, 1);
+        return new Date(date.getFullYear(), 3, 1);
+      }
+
+      function roundMoney(value, mode) {
+        if (mode === "none") return value;
+        if (mode === "paise") return Math.round((value + Number.EPSILON) * 100) / 100;
+        if (mode === "ceil") return Math.ceil(value - Number.EPSILON);
+        return Math.round(value);
+      }
+
+      function money(value, mode = "rupee") {
+        return mode === "paise" ? formatter2.format(value) : formatter0.format(value);
+      }
+
+      function getInputs() {
+        return {
+          amount: Number(document.getElementById("amount").value),
+          startDate: localDate(document.getElementById("startDate").value),
+          tenure: Number(document.getElementById("tenure").value),
+          tenureUnit: document.getElementById("tenureUnit").value,
+          rate: Number(document.getElementById("rate").value) / 100,
+          compound: Number(document.getElementById("compound").value),
+          creditRounding: document.getElementById("creditRounding").value,
+          fyRounding: document.getElementById("fyRounding").value,
+          showCurrentFyOnly: document.getElementById("showCurrentFyOnly").checked,
+        };
+      }
+
+      function validate(input) {
+        if (!Number.isFinite(input.amount) || input.amount <= 0) return "Enter a valid deposit amount.";
+        if (!(input.startDate instanceof Date) || Number.isNaN(input.startDate.getTime())) {
+          return "Enter a valid FD start date.";
+        }
+        if (!Number.isFinite(input.tenure) || input.tenure <= 0) return "Enter a valid tenure.";
+        if (!Number.isFinite(input.rate) || input.rate < 0) return "Enter a valid interest rate.";
+        return "";
+      }
+
+      function calculate(input) {
+        const totalMonths = input.tenureUnit === "years" ? input.tenure * 12 : input.tenure;
+        const monthsPerPeriod = 12 / input.compound;
+        const periods = Math.round(totalMonths / monthsPerPeriod);
+        const maturityDate = addMonths(input.startDate, totalMonths);
+        const periodicRate = input.rate / input.compound;
+        const events = [];
+        const rows = new Map();
+        const today = todayLocal();
+        const todayExclusive = addDays(today, 1);
+        const currentFyStart = financialYearStart(today);
+        const currentFyLabel = financialYearLabel(today);
+        let balance = input.amount;
+        let periodStart = input.startDate;
+
+        for (let i = 1; i <= periods; i += 1) {
+          const periodEnd = addMonths(input.startDate, monthsPerPeriod * i);
+          const periodDays = daysBetween(periodStart, periodEnd);
+          const rawInterest = balance * periodicRate;
+          const creditedInterest = roundMoney(rawInterest, input.creditRounding);
+          const periodOpening = balance;
+          let cursor = periodStart;
+
+          while (cursor < periodEnd) {
+            const segmentEnd = new Date(Math.min(periodEnd, financialYearEndExclusive(cursor)));
+            const segmentDays = daysBetween(cursor, segmentEnd);
+            const allocatedInterest = creditedInterest * (segmentDays / periodDays);
+            const label = financialYearLabel(cursor);
+            const existing = rows.get(label) || {
+              label,
+              from: cursor,
+              to: addDays(segmentEnd, -1),
+              days: 0,
+              earned: 0,
+              credited: 0,
+              opening: 0,
+              closing: 0,
+              fyStart: financialYearStart(cursor),
+              quarterMap: new Map(),
+              monthMap: new Map(),
+              currentFyToDateInterest: 0,
+              currentFyToDateDays: 0,
+              currentFyToDateFrom: null,
+              currentFyToDateTo: null,
+            };
+
+            existing.from = existing.from < cursor ? existing.from : cursor;
+            existing.to = existing.to > addDays(segmentEnd, -1) ? existing.to : addDays(segmentEnd, -1);
+            existing.days += segmentDays;
+            existing.earned += allocatedInterest;
+
+            if (label === currentFyLabel) {
+              const currentOverlapStart = new Date(Math.max(cursor, currentFyStart));
+              const currentOverlapEnd = new Date(Math.min(segmentEnd, todayExclusive));
+              if (currentOverlapStart < currentOverlapEnd) {
+                const currentDays = daysBetween(currentOverlapStart, currentOverlapEnd);
+                const currentInterest = creditedInterest * (currentDays / periodDays);
+                existing.currentFyToDateInterest += currentInterest;
+                existing.currentFyToDateDays += currentDays;
+                existing.currentFyToDateFrom = existing.currentFyToDateFrom
+                  ? existing.currentFyToDateFrom < currentOverlapStart
+                    ? existing.currentFyToDateFrom
+                    : currentOverlapStart
+                  : currentOverlapStart;
+                existing.currentFyToDateTo = existing.currentFyToDateTo
+                  ? existing.currentFyToDateTo > addDays(currentOverlapEnd, -1)
+                    ? existing.currentFyToDateTo
+                    : addDays(currentOverlapEnd, -1)
+                  : addDays(currentOverlapEnd, -1);
+              }
+            }
+
+            let quarterCursor = cursor;
+            while (quarterCursor < segmentEnd) {
+              const quarterSegmentEnd = new Date(
+                Math.min(segmentEnd, financialQuarterEndExclusive(quarterCursor)),
+              );
+              const quarterDays = daysBetween(quarterCursor, quarterSegmentEnd);
+              const quarterInterest = creditedInterest * (quarterDays / periodDays);
+              const quarterInfo = financialQuarterInfo(quarterCursor);
+              const quarterExisting = existing.quarterMap.get(quarterInfo.key) || {
+                label: quarterInfo.label,
+                from: quarterCursor,
+                to: addDays(quarterSegmentEnd, -1),
+                days: 0,
+                interest: 0,
+                credited: 0,
+                opening: 0,
+                closing: 0,
+              };
+
+              quarterExisting.from =
+                quarterExisting.from < quarterCursor ? quarterExisting.from : quarterCursor;
+              quarterExisting.to =
+                quarterExisting.to > addDays(quarterSegmentEnd, -1)
+                  ? quarterExisting.to
+                  : addDays(quarterSegmentEnd, -1);
+              quarterExisting.days += quarterDays;
+              quarterExisting.interest += quarterInterest;
+              existing.quarterMap.set(quarterInfo.key, quarterExisting);
+              quarterCursor = quarterSegmentEnd;
+            }
+
+            let monthCursor = cursor;
+            while (monthCursor < segmentEnd) {
+              const monthSegmentEnd = new Date(Math.min(segmentEnd, monthEndExclusive(monthCursor)));
+              const monthDays = daysBetween(monthCursor, monthSegmentEnd);
+              const monthInterest = creditedInterest * (monthDays / periodDays);
+              const monthKey = `${monthCursor.getFullYear()}-${String(monthCursor.getMonth() + 1).padStart(2, "0")}`;
+              const monthExisting = existing.monthMap.get(monthKey) || {
+                label: monthLabel(monthCursor),
+                from: monthCursor,
+                to: addDays(monthSegmentEnd, -1),
+                days: 0,
+                interest: 0,
+              };
+
+              monthExisting.from = monthExisting.from < monthCursor ? monthExisting.from : monthCursor;
+              monthExisting.to =
+                monthExisting.to > addDays(monthSegmentEnd, -1)
+                  ? monthExisting.to
+                  : addDays(monthSegmentEnd, -1);
+              monthExisting.days += monthDays;
+              monthExisting.interest += monthInterest;
+              existing.monthMap.set(monthKey, monthExisting);
+              monthCursor = monthSegmentEnd;
+            }
+
+            rows.set(label, existing);
+            cursor = segmentEnd;
+          }
+
+          events.push({ date: periodEnd, interest: creditedInterest });
+          balance += creditedInterest;
+          periodStart = periodEnd;
+        }
+
+        const sortedRows = [...rows.values()].sort((a, b) => a.fyStart - b.fyStart);
+        let cumulativeEarned = 0;
+        for (const row of sortedRows) {
+          const fyEnd = new Date(row.fyStart.getFullYear() + 1, 3, 1);
+          const openingCredits = events
+            .filter((event) => event.date <= row.fyStart)
+            .reduce((sum, event) => sum + event.interest, 0);
+          const fyCredits = events
+            .filter((event) => event.date > row.fyStart && event.date <= fyEnd)
+            .reduce((sum, event) => sum + event.interest, 0);
+          row.opening = input.amount + openingCredits;
+          row.credited = fyCredits;
+          row.closing = row.opening + fyCredits;
+          row.displayEarned = roundMoney(row.earned, input.fyRounding);
+          cumulativeEarned += row.earned;
+          row.interestTotal = cumulativeEarned;
+          row.displayInterestTotal = roundMoney(row.interestTotal, input.fyRounding);
+          row.quarters = [...row.quarterMap.values()].sort((a, b) => a.from - b.from);
+          row.months = [...row.monthMap.values()].sort((a, b) => a.from - b.from);
+
+          let quarterInterestTotal = 0;
+          for (const quarter of row.quarters) {
+            const quarterEnd = addDays(quarter.to, 1);
+            const openingCredits = events
+              .filter((event) => event.date <= quarter.from)
+              .reduce((sum, event) => sum + event.interest, 0);
+            const quarterCredits = events
+              .filter((event) => event.date > quarter.from && event.date <= quarterEnd)
+              .reduce((sum, event) => sum + event.interest, 0);
+            quarter.opening = input.amount + openingCredits;
+            quarter.credited = quarterCredits;
+            quarter.closing = quarter.opening + quarterCredits;
+            quarterInterestTotal += quarter.interest;
+            quarter.interestTotal = quarterInterestTotal;
+          }
+
+          let accumulatedInterest = 0;
+          for (const month of row.months) {
+            month.previousInterest = accumulatedInterest;
+            accumulatedInterest += month.interest;
+            month.interestTotal = accumulatedInterest;
+            month.total = row.opening + accumulatedInterest;
+          }
+        }
+
+        return {
+          rows: sortedRows,
+          maturityDate,
+          maturityAmount: balance,
+          totalInterest: balance - input.amount,
+        };
+      }
+
+      function renderDetailTables(row, paiseMode) {
+        const detailMoneyMode = paiseMode ? "paise" : "rupee";
+        const currentFySummary =
+          row.currentFyToDateDays > 0
+            ? `
+              <section class="current-fy-summary">
+                <div>
+                  <span>Current FY Period</span>
+                  <strong>${dateFormatter.format(row.currentFyToDateFrom)} to ${dateFormatter.format(row.currentFyToDateTo)}</strong>
+                </div>
+                <div>
+                  <span>Days Till Date</span>
+                  <strong>${row.currentFyToDateDays}</strong>
+                </div>
+                <div>
+                  <span>Interest Till Date</span>
+                  <strong>${money(row.currentFyToDateInterest, "paise")}</strong>
+                </div>
+                <div>
+                  <span>Accrued Amount Till Date</span>
+                  <strong>${money(row.opening + row.currentFyToDateInterest, "paise")}</strong>
+                </div>
+              </section>
+            `
+            : "";
+        const quarterRows = row.quarters
+          .map(
+            (quarter) => `
+              <tr>
+                <td>${quarter.label}</td>
+                <td>${dateFormatter.format(quarter.from)} to ${dateFormatter.format(quarter.to)}</td>
+                <td>${quarter.days}</td>
+                <td>${money(quarter.interest, "paise")}</td>
+                <td>${money(quarter.interestTotal, "paise")}</td>
+                <td>${money(quarter.credited, detailMoneyMode)}</td>
+                <td>${money(quarter.closing, detailMoneyMode)}</td>
+              </tr>
+            `,
+          )
+          .join("");
+
+        const monthRows = row.months
+          .map(
+            (month) => `
+              <tr>
+                <td>${month.label}</td>
+                <td>${dateFormatter.format(month.from)} to ${dateFormatter.format(month.to)}</td>
+                <td>${month.days}</td>
+                <td>${money(month.previousInterest, "paise")}</td>
+                <td>${money(month.interest, "paise")}</td>
+                <td>${money(month.interestTotal, "paise")}</td>
+                <td>${money(month.total, "paise")}</td>
+              </tr>
+            `,
+          )
+          .join("");
+
+        return `
+          <div class="detail-grid">
+            ${currentFySummary}
+            <section class="detail-section">
+              <div class="detail-title">Financial quarter-wise details</div>
+              <div class="table-wrap">
+                <table class="mini-table">
+                  <thead>
+                    <tr>
+                      <th>Quarter</th>
+                      <th>Period Covered</th>
+                      <th>Days</th>
+                      <th>Interest</th>
+                      <th>Interest Total</th>
+                      <th>Credited</th>
+                      <th>Total at Quarter End</th>
+                    </tr>
+                  </thead>
+                  <tbody>${quarterRows}</tbody>
+                </table>
+              </div>
+            </section>
+
+            <section class="detail-section">
+              <div class="detail-title">Month-wise interest earned</div>
+              <div class="table-wrap">
+                <table class="mini-table">
+                  <thead>
+                    <tr>
+                      <th>Month</th>
+                      <th>Period Covered</th>
+                      <th>Days</th>
+                      <th>Previous Interest</th>
+                      <th>Interest</th>
+                      <th>Interest Total</th>
+                      <th>Amount Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>${monthRows}</tbody>
+                </table>
+              </div>
+            </section>
+          </div>
+        `;
+      }
+
+      function render() {
+        const input = getInputs();
+        const error = validate(input);
+        errorEl.textContent = error;
+        if (error) return;
+
+        const result = calculate(input);
+        const paiseMode = input.creditRounding === "paise" || input.creditRounding === "none";
+        const fyPaiseMode = input.fyRounding === "paise";
+        const currentFyLabel = financialYearLabel(new Date());
+        const visibleRows = input.showCurrentFyOnly
+          ? result.rows.filter((row) => row.label === currentFyLabel)
+          : result.rows;
+        const visibleEarned = roundMoney(
+          visibleRows.reduce((sum, row) => sum + row.earned, 0),
+          input.fyRounding,
+        );
+        const visibleCredited = visibleRows.reduce((sum, row) => sum + row.credited, 0);
+        const visibleInterestTotal = visibleRows.length
+          ? visibleRows[visibleRows.length - 1].displayInterestTotal
+          : 0;
+        const visibleFinalAmount = visibleRows.length
+          ? visibleRows[visibleRows.length - 1].closing
+          : result.maturityAmount;
+
+        summaryEl.innerHTML = `
+          <div class="panel metric"><span>Deposit</span><strong>${money(input.amount)}</strong></div>
+          <div class="panel metric good"><span>Total Interest</span><strong>${money(result.totalInterest, paiseMode ? "paise" : "rupee")}</strong></div>
+          <div class="panel metric"><span>Maturity Amount</span><strong>${money(result.maturityAmount, paiseMode ? "paise" : "rupee")}</strong></div>
+        `;
+
+        maturityTextEl.textContent = `Matures on ${dateFormatter.format(result.maturityDate)}`;
+
+        rowsEl.innerHTML = visibleRows
+          .map((row, index) => {
+            const detailId = `fy-detail-${index}`;
+            return `
+              <tr class="year-row" data-detail="${detailId}">
+                <td>
+                  <button class="year-button" type="button" aria-expanded="false" aria-controls="${detailId}">
+                    ${row.label}
+                  </button>
+                </td>
+                <td>${dateFormatter.format(row.from)} to ${dateFormatter.format(row.to)}</td>
+                <td>${row.days}</td>
+                <td>${money(row.opening, paiseMode ? "paise" : "rupee")}</td>
+                <td>${money(row.displayEarned, fyPaiseMode ? "paise" : "rupee")}</td>
+                <td>${money(row.displayInterestTotal, fyPaiseMode ? "paise" : "rupee")}</td>
+                <td>${money(row.credited, paiseMode ? "paise" : "rupee")}</td>
+                <td>${money(row.closing, paiseMode ? "paise" : "rupee")}</td>
+              </tr>
+              <tr class="detail-row" id="${detailId}" hidden>
+                <td colspan="8">${renderDetailTables(row, paiseMode)}</td>
+              </tr>
+            `;
+          })
+          .join("");
+
+        totalsEl.innerHTML = `
+          <tr>
+            <td colspan="4">Total</td>
+            <td>${money(visibleEarned, fyPaiseMode ? "paise" : "rupee")}</td>
+            <td>${money(visibleInterestTotal, fyPaiseMode ? "paise" : "rupee")}</td>
+            <td>${money(visibleCredited, paiseMode ? "paise" : "rupee")}</td>
+            <td>${money(visibleFinalAmount, paiseMode ? "paise" : "rupee")}</td>
+          </tr>
+        `;
+
+        noteEl.textContent =
+          input.showCurrentFyOnly
+            ? `Showing ${currentFyLabel} only. Click the year to expand month-wise and financial-quarter details.`
+            : "Click a financial year to expand month-wise and financial-quarter details. Month-wise amount total is accrued interest added month by month; year-end total amount is based on credited compounding entries.";
+      }
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        render();
+      });
+
+      rowsEl.addEventListener("click", (event) => {
+        const button = event.target.closest(".year-button");
+        const row = event.target.closest(".year-row");
+        const sourceRow = button ? button.closest(".year-row") : row;
+        if (!sourceRow) return;
+
+        const detail = document.getElementById(sourceRow.dataset.detail);
+        const toggle = sourceRow.querySelector(".year-button");
+        if (!detail || !toggle) return;
+
+        const isOpen = !detail.hidden;
+        detail.hidden = isOpen;
+        toggle.setAttribute("aria-expanded", String(!isOpen));
+      });
+
+      for (const control of form.querySelectorAll("input, select")) {
+        control.addEventListener("input", render);
+      }
+
+      resetBtn.addEventListener("click", () => {
+        for (const [key, value] of Object.entries(defaults)) {
+          const control = document.getElementById(key);
+          if (control.type === "checkbox") {
+            control.checked = value;
+          } else {
+            control.value = value;
+          }
+        }
+        render();
+      });
+
+      render();
+    </script>
+  </body>
+</html>
+Displaying fd calculator with quarter and monthly calculations.html.Next
